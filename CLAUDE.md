@@ -122,6 +122,8 @@ type Topic = "health-care" | "mental-health" | "caregivers" | "housing" | "buria
   | "school" | "family-school" | "jobs" | "training" | "gov-jobs" | "business";
 ```
 
+County agency ids are `<county>-vsa` (e.g. `chemung-vsa`). A program card whose who to ask is the county agency uses `who_to_ask: "county-vsa"`, which the app resolves to the chosen county's agency; `validate.py` must accept it.
+
 `data/zip_county.json` maps ZIP to a list of counties, e.g. `{ "14830": ["Steuben"] }`. Build it once with `pipeline/build_zip_county.py` from the Census 2020 ZCTA-to-county file (URL in `sources.yaml`). Keep only ZIPs that overlap the 9 county FIPS codes.
 
 ## Assistant flow (`netlify/functions/ask.ts`)

@@ -1,0 +1,607 @@
+/* Waypoint brand tokens (CLAUDE.md, Brand). Light only: the brand is navy on white. */
+:root {
+  --navy: #102848;
+  --bg: #ffffff;
+  --text: #17212b;
+  --muted: #566472;
+  --accent: #1d4f91;
+  --crisis-text: #a52a20;
+  --crisis-bg: #f7e0dd;
+  --rule: #c8d0d8;
+  --tint: #f1f4f8;
+  --tabbar-h: 64px;
+  --font: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--navy);
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 50;
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+/* Layout */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.page:focus {
+  outline: none;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.logo {
+  display: block;
+  flex: none;
+}
+
+.wordmark {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.county-chip {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px 0 10px;
+  border: 1.5px solid var(--muted);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--navy);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.county-chip:hover {
+  background: var(--tint);
+}
+
+/* Tab bar: fixed to the bottom on phones */
+.tabbar {
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tabbar-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tabbar-h);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tabbar-link.active {
+  color: var(--navy);
+  font-weight: 800;
+  box-shadow: inset 0 3px 0 var(--navy);
+}
+
+/* Crisis banner */
+.crisis {
+  background: var(--crisis-bg);
+  color: var(--crisis-text);
+  font-weight: 600;
+  font-size: 17px;
+  padding: 0 16px;
+}
+
+.crisis p {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 0;
+  line-height: 1.6;
+}
+
+/* Inline padding grows the tap area to 44px without spreading the lines apart. */
+.crisis a {
+  padding: 10px 0;
+  color: inherit;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.example-note {
+  background: #fff4cc;
+  color: #4d3a00;
+  border-bottom: 1px solid #e3cf80;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Footer clears the fixed tab bar on phones */
+.site-footer {
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 16px;
+  padding: 20px 16px calc(var(--tabbar-h) + 24px + env(safe-area-inset-bottom));
+}
+
+.site-footer p {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--accent);
+}
+
+.btn-secondary:hover {
+  background: var(--tint);
+}
+
+.link-btn {
+  display: inline-block;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.lead {
+  font-size: 19px;
+  margin-bottom: 20px;
+  max-width: 60ch;
+}
+
+.notice {
+  border: 1.5px dashed var(--rule);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--muted);
+}
+
+/* County picker */
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.zip-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.zip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.zip-row input {
+  flex: 1 1 140px;
+  max-width: 220px;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 2px solid var(--muted);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.zip-row input[aria-invalid="true"] {
+  border-color: var(--crisis-text);
+}
+
+.form-error {
+  color: var(--crisis-text);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.zip-choices {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.picker-or {
+  font-size: 21px;
+  margin-top: 8px;
+}
+
+.county-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.county-btn {
+  min-height: 56px;
+  padding: 0 12px;
+  border: 2px solid var(--muted);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.county-btn:hover {
+  border-color: var(--navy);
+  background: var(--tint);
+}
+
+.picker-cancel {
+  margin-top: 20px;
+}
+
+/* Home */
+.help-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.more-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.more-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 56px;
+  padding: 14px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.more-link b {
+  color: var(--accent);
+  font-size: 19px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.more-link:hover {
+  background: var(--tint);
+}
+
+/* Tabs */
+.tab-who {
+  margin-bottom: 20px;
+}
+
+.tab-who + .notice {
+  margin-bottom: 20px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--muted);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+.card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Resource card */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.card-tag {
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card .card-name {
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.card-facts {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-facts div {
+  display: grid;
+  grid-template-columns: 4.6em minmax(0, 1fr);
+  gap: 8px;
+}
+
+.card-facts dt {
+  font-weight: 600;
+}
+
+.card-facts dd {
+  margin: 0;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card-who {
+  background: var(--tint);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.card-stale {
+  color: var(--crisis-text);
+  font-weight: 600;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 16px;
+  border-top: 1px solid var(--rule);
+  padding-top: 4px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.card-meta a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.ask-disclaimer {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+/* Desktop: tab bar moves into the header */
+@media (min-width: 760px) {
+  .site-header {
+    padding: 10px 24px;
+  }
+
+  .tabbar {
+    position: static;
+    display: flex;
+    gap: 4px;
+    margin-left: 16px;
+    border-top: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .tabbar-link {
+    flex-direction: row;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 17px;
+  }
+
+  .tabbar-link svg {
+    display: none;
+  }
+
+  .tabbar-link:hover {
+    background: var(--tint);
+  }
+
+  .tabbar-link.active {
+    background: var(--navy);
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .site-footer {
+    padding-bottom: 32px;
+  }
+
+  .county-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  h1 {
+    font-size: 38px;
+  }
+}
