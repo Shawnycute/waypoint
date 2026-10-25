@@ -1,0 +1,111 @@
+# Waypoint sources.
+#   opened: <date>  = the page was opened and checked by hand on that date
+#   verify: true    = found by search but not opened yet; open it before using any fact from it
+# Never take a phone number, address, or program fact from a page you haven't opened.
+
+counties:
+  - { name: Allegany,    fips: "36003" }
+  - { name: Cattaraugus, fips: "36009" }
+  - { name: Chautauqua,  fips: "36013" }
+  - { name: Chemung,     fips: "36015" }
+  - { name: Erie,        fips: "36029" }
+  - { name: Niagara,     fips: "36063" }
+  - { name: Schuyler,    fips: "36097" }
+  - { name: Steuben,     fips: "36101" }
+  - { name: Tioga,       fips: "36107" }
+
+zip_county:
+  url: https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_county20_natl.txt
+  verify: true
+
+# NYS Department of Veterans' Services lists every county agency, VA clinic, and Vet Center.
+# Paged with ?page=0 through ?page=11 (about 112 entries). Each entry links to a /location/ page.
+directory:
+  url: https://veterans.ny.gov/office-locations
+  opened: 2026-10-25
+
+county_offices:
+  - county: Allegany
+    urls:
+      - url: https://veterans.ny.gov/location/allegany-county-veterans-service-agency
+        opened: 2026-10-25   # lists 6085 State Route 19N, Belmont, NY 14813; 585-268-9387
+  - county: Cattaraugus
+    urls:
+      - url: https://veterans.ny.gov/location/cattaraugus-county-veterans-service-agency
+        verify: true          # path seen in the directory listing
+      - url: https://www.cattco.gov/departments/veterans-service-agency
+        verify: true
+  - county: Chautauqua
+    urls:
+      - url: https://veterans.ny.gov/location/chautauqua-county-veterans-service-agency
+        verify: true          # path seen in the directory listing
+      - url: https://chautauquacountyny.gov/464/Veteran-Services
+        verify: true
+  - county: Chemung
+    urls:
+      - url: https://veterans.ny.gov/location/chemung-county-veterans-service-agency
+        verify: true          # path seen in the directory listing
+  - county: Erie
+    urls:
+      - url: https://www3.erie.gov/veterans/about-us
+        verify: true
+      - url: https://veterans.ny.gov/office-locations
+        verify: true          # find the Erie entry in the paged directory
+  - county: Niagara
+    urls:
+      - url: https://www.niagaracounty.com/departments/s-z/veterans_service_agency/
+        verify: true
+      - url: https://veterans.ny.gov/office-locations
+        verify: true          # find the Niagara entry in the paged directory
+  - county: Schuyler
+    urls:
+      - url: https://veterans.ny.gov/office-locations
+        verify: true          # find the Schuyler entry in the paged directory; no county page found yet
+  - county: Steuben
+    urls:
+      - url: https://veterans.ny.gov/node/141
+        verify: true          # search title: "Steuben County Veterans Service Agency"
+      - url: https://steubencountyny.gov/Directory.aspx?DID=60
+        verify: true
+  - county: Tioga
+    urls:
+      - url: https://tiogacountyny.gov/departments/veterans-service-agency/contacts/
+        verify: true
+      - url: https://veterans.ny.gov/office-locations
+        verify: true          # find the Tioga entry in the paged directory
+
+facilities:
+  api: https://api.va.gov/services/va_facilities/v1/facilities
+  verify: true                # confirm base URL and auth header in developer.va.gov docs
+  fallback: https://www.va.gov/find-locations/
+  note: Bath VA Medical Center (Steuben County) must be included. Keep only facilities whose address is in one of the 9 counties.
+
+programs:
+  health:
+    - { name: "Apply for VA health care", url: "https://www.va.gov/health-care/how-to-apply/", verify: true }
+    - { name: "Vet Center counseling", url: "https://www.vetcenter.va.gov/", verify: true }
+    - { name: "Joseph P. Dwyer Veteran Peer Support Program", url: "search veterans.ny.gov for the program page", verify: true }
+    - { name: "Veterans Crisis Line", url: "https://www.veteranscrisisline.net/", verify: true }
+    - { name: "VA Caregiver Support Program", url: "https://www.caregiver.va.gov/", verify: true }
+    - { name: "SSVF housing help", url: "https://www.va.gov/homeless/ssvf/", verify: true }
+    - { name: "HUD-VASH housing vouchers", url: "https://www.va.gov/homeless/hud-vash.asp", verify: true }
+    - { name: "NY veterans' property tax exemptions", url: "https://www.tax.ny.gov/pit/property/exemption/vetexempt.htm", verify: true }
+    - { name: "VA pension", url: "https://www.va.gov/pension/", verify: true }
+    - { name: "Bath National Cemetery", url: "https://www.cem.va.gov/cems/nchp/bath.asp", verify: true }
+    - { name: "VA burial benefits", url: "https://www.va.gov/burials-memorials/", verify: true }
+  education:
+    - { name: "Post-9/11 GI Bill (Chapter 33)", url: "https://www.va.gov/education/about-gi-bill-benefits/post-9-11/", verify: true }
+    - { name: "NY Veterans Tuition Award", url: "https://hesc.ny.gov/vta", opened: 2026-10-22 }
+    - { name: "Survivors' and Dependents' Educational Assistance (Chapter 35)", url: "search va.gov for DEA Chapter 35", verify: true }
+    - { name: "NY MERIT Scholarship", url: "https://veterans.ny.gov/state-education-scholarships", opened: 2026-10-22 }
+    - { name: "Regents Awards for Children of Deceased and Disabled Veterans", url: "https://veterans.ny.gov/state-education-scholarships", opened: 2026-10-22 }
+    - name: "Veteran or certifying offices at district schools"
+      schools: [SUNY Corning Community College, Jamestown Community College, Alfred State, SUNY Fredonia, Elmira College, St. Bonaventure University, Hilbert College]
+      url: "search each school's site for its veterans services or VA certifying official page"
+      verify: true
+  work:
+    - { name: "NYS Career Centers: veteran specialists (DVOP, LVER)", url: "https://dol.ny.gov/nysdol-career-center-service-for-veteran-and-eligible-persons", opened: 2026-10-22 }
+    - { name: "VA Veteran Readiness and Employment (Chapter 31)", url: "https://www.va.gov/careers-employment/vocational-rehabilitation/", verify: true }
+    - { name: "Veterans' preference on USAJOBS", url: "https://www.usajobs.gov/help/working-in-government/unique-hiring-paths/veterans/", verify: true }
+    - { name: "Extra credits on NY civil service exams", url: "search cs.ny.gov for veterans' credits", verify: true }
+    - { name: "NY Service-Disabled Veteran-Owned Business certification", url: "https://veterans.ny.gov/service-disabled-veteran-owned-businesses", opened: 2026-10-22 }

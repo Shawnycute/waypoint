@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+pydantic
+anthropic
+pyyaml
+pytest

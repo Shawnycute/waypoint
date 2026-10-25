@@ -1,0 +1,80 @@
+# Waypoint data pipeline, hosted on GitHub Actions.
+# Put this file at .github/workflows/update-resources.yml in your repo.
+#
+# What it does:
+#   1. Runs every Monday, and whenever you press "Run workflow" on the Actions tab.
+#   2. Pulls VA facilities, fetches the county/state pages, extracts records with
+#      Claude, and checks them.
+#   3. Opens a pull request with whatever changed. Merging the PR is the approval
+#      step; Netlify redeploys the site on merge. If nothing changed, no PR opens.
+#
+# One-time setup (repo Settings):
+#   - Secrets and variables > Actions > New repository secret:
+#       ANTHROPIC_API_KEY   (from console.anthropic.com)
+#       VA_API_KEY          (free, from developer.va.gov)
+#   - Actions > General > Workflow permissions:
+#       choose "Read and write permissions" and tick
+#       "Allow GitHub Actions to create and approve pull requests".
+#
+# Your scripts need to follow two rules for this to work:
+#   - validate.py writes a short markdown summary (added / changed / removed /
+#     flagged) to the path after --report. That becomes the PR description.
+#   - Any script exits with a non-zero code on a hard error (bad schema, API down).
+#     The run then fails, no PR opens, and GitHub emails you.
+
+name: Update resources
+
+on:
+  schedule:
+    - cron: "17 10 * * 1"   # Mondays 10:17 UTC (6:17 AM ET in summer, 5:17 AM in winter)
+  workflow_dispatch:         # adds the "Run workflow" button
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-resources
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+
+      - name: Install pipeline packages
+        run: pip install -r pipeline/requirements.txt
+        # requirements.txt: requests, beautifulsoup4, pydantic, anthropic, pyyaml
+
+      - name: Pull, extract, and check records
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          VA_API_KEY: ${{ secrets.VA_API_KEY }}
+        run: |
+          python pipeline/va_facilities.py
+          python pipeline/fetch.py
+          python pipeline/extract.py
+          python pipeline/validate.py --report pipeline/report.md
+
+      - name: Open a pull request for review
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: pipeline/resource-update
+          delete-branch: true
+          commit-message: "Update resources (run ${{ github.run_number }})"
+          title: "Resource update: review before it goes live"
+          body-path: pipeline/report.md
+          labels: data-review
+          add-paths: |
+            data/resources.json
+            data/zip_county.json

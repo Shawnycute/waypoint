@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.netlify/
+__pycache__/
+.pytest_cache/
+pipeline/cache/
+pipeline/report.md
+.DS_Store
