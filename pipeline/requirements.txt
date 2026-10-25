@@ -1,6 +1,6 @@
 requests
 beautifulsoup4
 pydantic
-anthropic
+openai
 pyyaml
 pytest

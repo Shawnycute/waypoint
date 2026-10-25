@@ -16,7 +16,7 @@ Waypoint is a web app that helps veterans and their families in New York's 23rd 
    - Logs keep tab, county, and intent only. Never log the question text.
 6. **Every card shows its source link and last-checked date.** A record without a source doesn't exist.
 7. **Not official.** Every page has this footer: "Waypoint is a student project. It is not the VA, New York State, or any congressional office, and it is not legal advice." No government seals, and no politician's name, photo, or campaign content anywhere in the app.
-8. **Keys stay server-side.** `ANTHROPIC_API_KEY` exists only in the Netlify Function and the GitHub Action. Never put it in `web/` code or a `VITE_` variable.
+8. **Keys stay server-side.** `OPENAI_API_KEY` exists only in the Netlify Function and the GitHub Action, and `VA_API_KEY` only in the GitHub Action. Never put either in `web/` code or a `VITE_` variable.
 9. **Never invent data.** Every phone number, address, hours entry, and program fact comes from a page you actually opened. If you can't verify something, leave it out and list it in your report. URLs in `pipeline/sources.yaml` marked `verify: true` were found by search but not opened, so open them before using them.
 10. **Log AI use.** After each task, append to `AI_USE.md`: the date, what you generated, and what Shawn decided or changed. The app challenge requires a full AI disclosure.
 
@@ -25,9 +25,9 @@ Waypoint is a web app that helps veterans and their families in New York's 23rd 
 | Layer | Choice |
 | --- | --- |
 | Front end | React + TypeScript + Vite in `web/`, React Router, plain CSS (no UI kit) |
-| Assistant | One Netlify Function, `netlify/functions/ask.ts`, using `@anthropic-ai/sdk` |
-| Model | `claude-sonnet-5-5` for answers and extraction (`claude-haiku-5-5` is fine for extraction if cost matters). Answers capped at 400 tokens. |
-| Pipeline | Python 3.13 in `pipeline/`: requests, beautifulsoup4, pydantic, anthropic, pyyaml |
+| Assistant | One Netlify Function, `netlify/functions/ask.ts`, using the `openai` SDK (Chat Completions) |
+| Model | OpenAI `gpt-5.4-mini` for answers and extraction, with `reasoning_effort: "none"` (required for function calls on Chat Completions). Fallback: `gpt-4.1-mini` (omit `reasoning_effort`). Answers capped at 400 tokens with `max_completion_tokens`. |
+| Pipeline | Python 3.13 in `pipeline/`: requests, beautifulsoup4, pydantic, openai, pyyaml |
 | Pipeline host | GitHub Actions. `.github/workflows/update-resources.yml` is already written; match its commands, don't change them. |
 | Hosting | Netlify, connected to the GitHub repo, with deploy previews on pull requests |
 | Tests | Vitest for the guards; pytest for `validate.py` |
@@ -136,7 +136,7 @@ County agency ids are `<county>-vsa` (e.g. `chemung-vsa`). A program card whose 
    - "write/draft/fill out my claim", "appeal letter", "nexus letter"
    - On a match, return `{ type: "handoff", office }` with the county agency record. No model call.
 5. **Records:** live records where `counties` includes the county or is empty.
-6. **Call Claude** with the system prompt below, the records as JSON, and the question. Force a tool call that returns `{ kind: "answer" | "no_info" | "off_topic", text, cites: string[] }`.
+6. **Call the model** with the system prompt below, the records as JSON, and the question. Force a function call (`tool_choice` naming the function, `strict: true` schema) that returns `{ kind: "answer" | "no_info" | "off_topic", text, cites: string[] }`.
 7. **Cite check:**
    - `answer`: needs at least one cite, and every cite must be an id that was sent. Otherwise switch to the fallback.
    - `no_info`: return the fallback, "I don't have that yet," plus the county agency card.
@@ -158,10 +158,10 @@ You are Waypoint's assistant. You help veterans and their families in New York's
 ## Pipeline (matches the GitHub Action)
 
 - `va_facilities.py`: VA medical centers, clinics, and Vet Centers located in the 9 counties.
-  - Use the VA Facilities API with `VA_API_KEY`.
+  - Use the VA Facilities API with `VA_API_KEY`: `https://sandbox-api.va.gov/services/va_facilities/v1/facilities`, key in an `apikey` header. The sandbox key returns real facility data (Bath VA Medical Center checked 2026-10-25); the production host rejects it, and production access isn't needed.
   - If there's no key or it fails, use the facilities already in `resources.json` and flag it in the report.
 - `fetch.py`: downloads every `source_url` and every URL in `sources.yaml`. Respect robots.txt, send a clear User-Agent, and pause 1 second between requests to the same site.
-- `extract.py`: for `office` records, sends page text to Claude with a forced tool call that returns the record fields. Fields that aren't on the page stay empty. Hand-written `program` and `explainer` records are only link-checked, not re-extracted.
+- `extract.py`: for `office` records, sends page text to the model with a forced function call that returns the record fields. Fields that aren't on the page stay empty. Hand-written `program` and `explainer` records are only link-checked, not re-extracted.
 - `validate.py --report pipeline/report.md`:
   - Checks the schema, phone format, and that every URL loads.
   - Compares against the current `data/resources.json` and writes the updated file.

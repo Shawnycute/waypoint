@@ -4,14 +4,14 @@
 # What it does:
 #   1. Runs every Monday, and whenever you press "Run workflow" on the Actions tab.
 #   2. Pulls VA facilities, fetches the county/state pages, extracts records with
-#      Claude, and checks them.
+#      the OpenAI model, and checks them.
 #   3. Opens a pull request with whatever changed. Merging the PR is the approval
 #      step; Netlify redeploys the site on merge. If nothing changed, no PR opens.
 #
 # One-time setup (repo Settings):
 #   - Secrets and variables > Actions > New repository secret:
-#       ANTHROPIC_API_KEY   (from console.anthropic.com)
-#       VA_API_KEY          (free, from developer.va.gov)
+#       OPENAI_API_KEY      (from platform.openai.com)
+#       VA_API_KEY          (free sandbox key, from developer.va.gov)
 #   - Actions > General > Workflow permissions:
 #       choose "Read and write permissions" and tick
 #       "Allow GitHub Actions to create and approve pull requests".
@@ -54,11 +54,11 @@ jobs:
 
       - name: Install pipeline packages
         run: pip install -r pipeline/requirements.txt
-        # requirements.txt: requests, beautifulsoup4, pydantic, anthropic, pyyaml
+        # requirements.txt: requests, beautifulsoup4, pydantic, openai, pyyaml
 
       - name: Pull, extract, and check records
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           VA_API_KEY: ${{ secrets.VA_API_KEY }}
         run: |
           python pipeline/va_facilities.py

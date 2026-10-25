@@ -5,8 +5,8 @@ Deadline: **Monday Oct 26, 12:00 PM ET.** Aim to finish prompts 1 to 6 tonight, 
 ## Before you open Claude Code
 
 - [ ] Create a **public** GitHub repo called `waypoint`, clone it, and unzip this starter into it. Check that `CLAUDE.md` is at the top level; Claude Code reads it automatically.
-- [ ] **Anthropic API key:** console.anthropic.com → API Keys. Add a little credit and set a monthly spend limit.
-- [ ] **VA API key:** developer.va.gov, for the Facilities API. If it isn't ready tonight, skip it; the pipeline uses its fallback.
+- [ ] **OpenAI API key:** platform.openai.com → API keys. Add a little credit and set a monthly spend limit.
+- [ ] **VA API key:** developer.va.gov, sandbox access for the VA Facilities API (the sandbox returns real facility data). If it isn't ready tonight, skip it; the pipeline uses its fallback.
 - [ ] Copy `.env.example` to `.env` and paste in both keys. `.env` is already in `.gitignore`.
 - [ ] A Netlify account connected to your GitHub.
 - [ ] Open a terminal in the repo folder and start Claude Code.
@@ -37,7 +37,7 @@ Do build step 4: write pipeline/models.py, va_facilities.py, fetch.py, extract.p
 
 ### 5. Deploy
 ```
-Do build step 5: add netlify.toml (build web/, functions in netlify/functions, include data/** in the function bundle) and a README with setup and run steps, then push to GitHub. Give me the exact clicks for Netlify (import repo, ANTHROPIC_API_KEY env var) and GitHub (ANTHROPIC_API_KEY and VA_API_KEY secrets, workflow permissions set to read/write with "Allow GitHub Actions to create and approve pull requests").
+Do build step 5: add netlify.toml (build web/, functions in netlify/functions, include data/** in the function bundle) and a README with setup and run steps, then push to GitHub. Give me the exact clicks for Netlify (import repo, OPENAI_API_KEY env var) and GitHub (OPENAI_API_KEY and VA_API_KEY secrets, workflow permissions set to read/write with "Allow GitHub Actions to create and approve pull requests").
 ```
 Then do those clicks yourself. On GitHub, go to Actions → Update resources → **Run workflow**, check the pull request's Netlify preview, and merge.
 
@@ -48,7 +48,7 @@ Do build step 6: run all 11 checks in CLAUDE.md against the live site at [paste 
 
 ### 7. Wrap up
 ```
-Finish AI_USE.md so it's complete and honest: what you generated, what I wrote or decided, and how the app uses Claude at runtime. Then list the 3 hardest technical problems in this build and how we solved them, in plain words, so I can pick one for my submission form.
+Finish AI_USE.md so it's complete and honest: what you generated, what I wrote or decided, and how the app uses the OpenAI model at runtime. Then list the 3 hardest technical problems in this build and how we solved them, in plain words, so I can pick one for my submission form.
 ```
 
 ## After Claude Code (only you can do these)

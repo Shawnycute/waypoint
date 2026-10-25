@@ -75,8 +75,8 @@ county_offices:
         verify: true          # find the Tioga entry in the paged directory
 
 facilities:
-  api: https://api.va.gov/services/va_facilities/v1/facilities
-  verify: true                # confirm base URL and auth header in developer.va.gov docs
+  api: https://sandbox-api.va.gov/services/va_facilities/v1/facilities
+  opened: 2026-10-25           # sandbox key works with an apikey header and returns real data; api.va.gov rejects it
   fallback: https://www.va.gov/find-locations/
   note: Bath VA Medical Center (Steuben County) must be included. Keep only facilities whose address is in one of the 9 counties.
 
